@@ -1,0 +1,38 @@
+.settings-panel h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.settings-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.settings-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.settings-grid input {
+  padding: 5px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 140px;
+}
+
+.inline-fields {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+}
+
+.inline-fields input {
+  width: 70px;
+}

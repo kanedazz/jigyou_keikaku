@@ -1,0 +1,66 @@
+.statement-table-wrapper {
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.statement-table {
+  border-collapse: collapse;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.statement-table th,
+.statement-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: right;
+}
+
+.statement-table th {
+  background: #f8fafc;
+  color: #475569;
+  position: sticky;
+  top: 0;
+}
+
+.label-col {
+  position: sticky;
+  left: 0;
+  background: #fff;
+  text-align: left;
+  font-weight: 500;
+  color: #334155;
+  z-index: 1;
+  min-width: 120px;
+}
+
+thead .label-col {
+  background: #f8fafc;
+  z-index: 2;
+}
+
+.annual-col {
+  background: #eef2ff;
+}
+
+.row-strong td {
+  font-weight: 700;
+  background: #f8fafc;
+}
+
+.value-negative {
+  color: #dc2626;
+}
+
+.statement-heading {
+  font-size: 14px;
+  color: #1e293b;
+  margin: 0 0 6px;
+}
+
+.statement-note {
+  font-size: 11px;
+  color: #94a3b8;
+  margin: 0 0 8px;
+}

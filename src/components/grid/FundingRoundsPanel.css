@@ -1,0 +1,38 @@
+.funding-panel h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #334155;
+}
+
+.funding-panel table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.funding-panel th {
+  text-align: left;
+  font-size: 12px;
+  color: #64748b;
+  padding: 4px 8px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.funding-panel td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.funding-panel input {
+  padding: 4px 6px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 140px;
+}
+
+.funding-panel .hint {
+  margin-left: 6px;
+  font-size: 11px;
+  color: #94a3b8;
+}
