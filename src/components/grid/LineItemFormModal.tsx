@@ -1,12 +1,13 @@
 import { useState } from "react";
-import type { FormulaType, HeadcountEntry, LineItem } from "../../types/financial";
+import type { FormulaType, HeadcountEntry, LineItem, MonthIndex } from "../../types/financial";
+import { TOTAL_MONTHS } from "../../types/financial";
 import { FORMULA_KIND_LABELS, defaultFormulaFor } from "../../utils/formulaLabel";
 import "./LineItemFormModal.css";
 
 interface Props {
   title: string;
   initial?: LineItem;
-  onSave: (label: string, formula: FormulaType) => void;
+  onSave: (label: string, formula: FormulaType, startMonth: MonthIndex) => void;
   onClose: () => void;
 }
 
@@ -23,11 +24,12 @@ export function LineItemFormModal({ title, initial, onSave, onClose }: Props) {
   const [formula, setFormula] = useState<FormulaType>(
     initial?.formula ?? defaultFormulaFor("fixedAmount"),
   );
+  const [startMonth, setStartMonth] = useState<MonthIndex>(initial?.startMonth ?? 0);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!label.trim()) return;
-    onSave(label.trim(), formula);
+    onSave(label.trim(), formula, startMonth);
   };
 
   return (
@@ -53,6 +55,23 @@ export function LineItemFormModal({ title, initial, onSave, onClose }: Props) {
               ))}
             </select>
           </label>
+
+          {formula.kind !== "headcountCost" && (
+            <label className="field">
+              <span>発生開始月（何ヶ月目から発生するか）</span>
+              <input
+                type="number"
+                min={1}
+                max={TOTAL_MONTHS}
+                value={startMonth + 1}
+                onChange={(e) => {
+                  const raw = Number(e.target.value);
+                  const clamped = Math.min(Math.max(raw, 1), TOTAL_MONTHS);
+                  setStartMonth(clamped - 1);
+                }}
+              />
+            </label>
+          )}
 
           <FormulaFields formula={formula} onChange={setFormula} />
 
@@ -197,8 +216,9 @@ function HeadcountEditor({
         <div key={i} className="headcount-row">
           <input
             type="number"
-            value={entry.fromMonth}
-            onChange={(e) => update(i, { fromMonth: Number(e.target.value) })}
+            min={1}
+            value={entry.fromMonth + 1}
+            onChange={(e) => update(i, { fromMonth: Number(e.target.value) - 1 })}
             aria-label="開始月"
           />
           <span>ヶ月目〜</span>

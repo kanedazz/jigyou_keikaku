@@ -8,6 +8,7 @@ import { RunwayWarningBanner } from "../warnings/RunwayWarningBanner";
 import { RevenueProfitChart } from "../charts/RevenueProfitChart";
 import { CashRunwayChart } from "../charts/CashRunwayChart";
 import { ExportButton } from "../export/ExportButton";
+import { BackupButton, RestoreButton } from "../backup/BackupButtons";
 import { useProjectStore } from "../../store/useProjectStore";
 import "./AppShell.css";
 
@@ -31,6 +32,8 @@ export function AppShell() {
           <button className="btn-secondary" onClick={() => resetToEmpty()}>
             新規作成（クリア）
           </button>
+          <BackupButton />
+          <RestoreButton />
           <ExportButton />
         </div>
       </header>

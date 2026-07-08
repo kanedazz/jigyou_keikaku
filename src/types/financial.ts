@@ -62,6 +62,12 @@ export interface LineItem {
   label: string;
   category: LineItemCategory;
   formula: FormulaType;
+  /**
+   * 発生開始月（0始まり）。この月より前は常に0として扱われ、この月以降は
+   * formula の0ヶ月目としてシフトして計算される（headcountCost は
+   * headcountByMonth 側で開始月を管理するため常に0固定）。
+   */
+  startMonth: MonthIndex;
   /** セル直接編集による上書き値。monthIndex -> 値。 */
   overrides: Partial<Record<MonthIndex, number>>;
 }

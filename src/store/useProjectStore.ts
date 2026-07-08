@@ -7,10 +7,11 @@ import type {
   FundingRound,
   LineItem,
   LineItemCategory,
+  MonthIndex,
   ProjectAssumptions,
 } from "../types/financial";
 import type { DisplayPeriod } from "../types/statements";
-import { STORAGE_KEY, STORAGE_VERSION } from "./persistence";
+import { migrateAssumptions, STORAGE_KEY, STORAGE_VERSION } from "./persistence";
 
 function emptyAssumptions(): ProjectAssumptions {
   return {
@@ -61,13 +62,23 @@ interface ProjectState {
   setInitialCash: (value: number) => void;
   setTaxRate: (rate: number) => void;
 
-  addLineItem: (category: LineItemCategory, label: string, formula: FormulaType) => void;
+  addLineItem: (
+    category: LineItemCategory,
+    label: string,
+    formula: FormulaType,
+    startMonth?: MonthIndex,
+  ) => void;
   removeLineItem: (category: LineItemCategory, itemId: string) => void;
   renameLineItem: (category: LineItemCategory, itemId: string, label: string) => void;
   updateLineItemFormula: (
     category: LineItemCategory,
     itemId: string,
     formula: FormulaType,
+  ) => void;
+  setLineItemStartMonth: (
+    category: LineItemCategory,
+    itemId: string,
+    startMonth: MonthIndex,
   ) => void;
 
   /** 単一月のセルを直接上書きする（グリッドの月次列編集用） */
@@ -115,11 +126,11 @@ export const useProjectStore = create<ProjectState>()(
           assumptions: { ...state.assumptions, tax: { rate } },
         })),
 
-      addLineItem: (category, label, formula) =>
+      addLineItem: (category, label, formula, startMonth = 0) =>
         set((state) => ({
           assumptions: updateLineItems(state.assumptions, category, (items) => [
             ...items,
-            { id: generateId(category), label, category, formula, overrides: {} },
+            { id: generateId(category), label, category, formula, startMonth, overrides: {} },
           ]),
         })),
 
@@ -141,6 +152,13 @@ export const useProjectStore = create<ProjectState>()(
         set((state) => ({
           assumptions: updateLineItems(state.assumptions, category, (items) =>
             items.map((item) => (item.id === itemId ? { ...item, formula } : item)),
+          ),
+        })),
+
+      setLineItemStartMonth: (category, itemId, startMonth) =>
+        set((state) => ({
+          assumptions: updateLineItems(state.assumptions, category, (items) =>
+            items.map((item) => (item.id === itemId ? { ...item, startMonth } : item)),
           ),
         })),
 
@@ -219,6 +237,13 @@ export const useProjectStore = create<ProjectState>()(
       name: STORAGE_KEY,
       version: STORAGE_VERSION,
       partialize: (state) => ({ assumptions: state.assumptions }),
+      migrate: (persistedState, version) => {
+        const state = persistedState as { assumptions: ProjectAssumptions };
+        if (state?.assumptions) {
+          state.assumptions = migrateAssumptions(state.assumptions, version);
+        }
+        return state;
+      },
     },
   ),
 );

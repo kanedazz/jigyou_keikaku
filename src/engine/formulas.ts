@@ -46,7 +46,11 @@ function resolveHeadcount(
   return applicable.length > 0 ? applicable[0].count : 0;
 }
 
-/** 上書き値があればそれを優先し、なければ数式から算出する。 */
+/**
+ * 上書き値があればそれを優先し、なければ数式から算出する。
+ * startMonth より前の月は常に0（ただし override があればそちらが優先）。
+ * startMonth 以降は、startMonth を数式上の0ヶ月目とみなしてシフトして計算する。
+ */
 export function resolveLineItem(
   item: LineItem,
   monthIndex: MonthIndex,
@@ -56,7 +60,11 @@ export function resolveLineItem(
   if (override !== undefined) {
     return override;
   }
-  return resolveFormula(item.formula, monthIndex, ctx);
+  const startMonth = item.startMonth ?? 0;
+  if (monthIndex < startMonth) {
+    return 0;
+  }
+  return resolveFormula(item.formula, monthIndex - startMonth, ctx);
 }
 
 export function sumLineItems(

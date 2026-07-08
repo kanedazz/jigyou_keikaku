@@ -52,6 +52,7 @@ export function AssumptionsGrid() {
   const addLineItem = useProjectStore((s) => s.addLineItem);
   const renameLineItem = useProjectStore((s) => s.renameLineItem);
   const updateLineItemFormula = useProjectStore((s) => s.updateLineItemFormula);
+  const setLineItemStartMonth = useProjectStore((s) => s.setLineItemStartMonth);
   const setCellValue = useProjectStore((s) => s.setCellValue);
 
   const [modalState, setModalState] = useState<
@@ -180,12 +181,13 @@ export function AssumptionsGrid() {
           }
           initial={modalState.mode === "edit" ? modalState.item : undefined}
           onClose={() => setModalState(null)}
-          onSave={(label, formula: FormulaType) => {
+          onSave={(label, formula: FormulaType, startMonth) => {
             if (modalState.mode === "add") {
-              addLineItem(modalState.category, label, formula);
+              addLineItem(modalState.category, label, formula, startMonth);
             } else {
               renameLineItem(modalState.category, modalState.item.id, label);
               updateLineItemFormula(modalState.category, modalState.item.id, formula);
+              setLineItemStartMonth(modalState.category, modalState.item.id, startMonth);
             }
             setModalState(null);
           }}

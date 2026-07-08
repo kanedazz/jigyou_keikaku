@@ -9,7 +9,15 @@ export const FORMULA_KIND_LABELS: Record<FormulaType["kind"], string> = {
   fixedAmount: "毎月固定額",
 };
 
-export function describeFormula(formula: FormulaType): string {
+export function describeFormula(formula: FormulaType, startMonth: number = 0): string {
+  const base = describeFormulaBase(formula);
+  if (formula.kind !== "headcountCost" && startMonth > 0) {
+    return `${base}（${startMonth + 1}ヶ月目から発生）`;
+  }
+  return base;
+}
+
+function describeFormulaBase(formula: FormulaType): string {
   switch (formula.kind) {
     case "fixedGrowth":
       return `初月${formatYen(formula.initialValue)}円 / 月次成長率${formatPercent(formula.monthlyGrowthRate)}`;
@@ -19,7 +27,7 @@ export function describeFormula(formula: FormulaType): string {
       return `売上の${formatPercent(formula.percent)}`;
     case "headcountCost":
       return `平均給与${formatYen(formula.avgMonthlySalary)}円 / ${formula.headcountByMonth
-        .map((h) => `${h.fromMonth}ヶ月目〜${h.count}人`)
+        .map((h) => `${h.fromMonth + 1}ヶ月目〜${h.count}人`)
         .join("、")}`;
     case "fixedAmount":
       return `毎月${formatYen(formula.monthlyAmount)}円`;

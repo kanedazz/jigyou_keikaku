@@ -33,11 +33,11 @@ export function FundingRoundsPanel() {
               <td>
                 <input
                   type="number"
-                  min={0}
-                  max={59}
-                  value={round.monthIndex}
+                  min={1}
+                  max={60}
+                  value={round.monthIndex + 1}
                   onChange={(e) =>
-                    updateFundingRound(round.id, { monthIndex: Number(e.target.value) })
+                    updateFundingRound(round.id, { monthIndex: Number(e.target.value) - 1 })
                   }
                 />
               </td>
